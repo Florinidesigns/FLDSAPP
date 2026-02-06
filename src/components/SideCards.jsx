@@ -1,21 +1,103 @@
 import React from 'react';
 
-function SideCards({ cardCount = 4, data = [] }) {
-    const cards = data.length > 0 ? data : Array.from({ length: cardCount }, (_, i) => ({
-        id: i + 1,
-        title: `Card ${i + 1}`,
-        value: 'Dados'
-    }));
+function SideCards({ cardCount = 4, pageContext = 'default' }) {
+    // Mock data para diferentes contextos de páginas
+    const mockData = {
+        'vendas-top': [
+            { id: 1, title: 'Cliente Top', value: 'Tech Solutions Lda', subtitle: '245.000 €' },
+            { id: 2, title: 'Produto Mais Vendido', value: 'Laptop Dell XPS 15', subtitle: '127 unidades' },
+            { id: 3, title: 'Vendedor Destaque', value: 'João Silva', subtitle: '432.000 €' },
+            { id: 4, title: 'Região Líder', value: 'Lisboa', subtitle: '38% do total' }
+        ],
+        'vendas-stats': [
+            { id: 1, title: 'Pedidos Pendentes', value: '47', subtitle: 'A processar' },
+            { id: 2, title: 'Encomendas Hoje', value: '23', subtitle: '+15% vs ontem' },
+            { id: 3, title: 'Tempo Médio', value: '2.3 dias', subtitle: 'Entrega' },
+            { id: 4, title: 'Satisfação', value: '4.7/5', subtitle: '892 avaliações' }
+        ],
+        'compras-top': [
+            { id: 1, title: 'Fornecedor Top', value: 'Global Tech Supply', subtitle: '387.000 €' },
+            { id: 2, title: 'Produto Mais Comprado', value: 'Componentes Eletrónicos', subtitle: '245 unidades' },
+            { id: 3, title: 'Categoria Maior', value: 'Hardware', subtitle: '42% do total' },
+            { id: 4, title: 'Prazo Médio', value: '28 dias', subtitle: 'Pagamento' }
+        ],
+        'compras-stats': [
+            { id: 1, title: 'Encomendas Ativas', value: '34', subtitle: 'Em trânsito' },
+            { id: 2, title: 'Faturas Pendentes', value: '18', subtitle: 'A pagar' },
+            { id: 3, title: 'Valor Pendente', value: '142.500 €', subtitle: 'A receber' },
+            { id: 4, title: 'Fornecedores Ativos', value: '87', subtitle: 'Este mês' }
+        ],
+        'clientes-top': [
+            { id: 1, title: 'Cliente Fidelizado', value: 'Mega Store SA', subtitle: '5 anos' },
+            { id: 2, title: 'Maior Crescimento', value: 'Quick Solutions', subtitle: '+156% este ano' },
+            { id: 3, title: 'Setor Principal', value: 'Tecnologia', subtitle: '34% clientes' },
+            { id: 4, title: 'Novo Cliente Top', value: 'Innovation Hub', subtitle: '89.000 € (3 meses)' }
+        ],
+        'clientes-stats': [
+            { id: 1, title: 'Contactos Hoje', value: '142', subtitle: '23 novos' },
+            { id: 2, title: 'Oportunidades', value: '67', subtitle: 'Em negociação' },
+            { id: 3, title: 'Taxa Resposta', value: '87%', subtitle: 'Em 24h' },
+            { id: 4, title: 'NPS Score', value: '72', subtitle: 'Excelente' }
+        ],
+        'fornecedores-top': [
+            { id: 1, title: 'Melhor Qualidade', value: 'Premium Supplies', subtitle: '9.4/10 score' },
+            { id: 2, title: 'Mais Pontual', value: 'Express Logistics', subtitle: '98% on-time' },
+            { id: 3, title: 'Melhor Preço', value: 'Bulk Wholesale Co', subtitle: '-12% vs média' },
+            { id: 4, title: 'Parceiro Estratégico', value: 'Global Partners Ltd', subtitle: '8 anos' }
+        ],
+        'fornecedores-stats': [
+            { id: 1, title: 'Entregas Hoje', value: '12', subtitle: '8 completas' },
+            { id: 2, title: 'Atrasos', value: '3', subtitle: '2.1% do total' },
+            { id: 3, title: 'Qualidade Média', value: '8.7/10', subtitle: 'Score' },
+            { id: 4, title: 'Novos Fornecedores', value: '5', subtitle: 'Este trimestre' }
+        ],
+        'artigos-top': [
+            { id: 1, title: 'Stock Crítico', value: '24 artigos', subtitle: 'Abaixo mínimo' },
+            { id: 2, title: 'Mais Rentável', value: 'Serie Premium XL', subtitle: '67% margem' },
+            { id: 3, title: 'Maior Rotação', value: 'Acessórios USB-C', subtitle: '12.3x/ano' },
+            { id: 4, title: 'Novo Lançamento', value: 'Smart Kit Pro', subtitle: '342 vendas' }
+        ],
+        'artigos-stats': [
+            { id: 1, title: 'Movimentos Hoje', value: '347', subtitle: '89 entradas' },
+            { id: 2, title: 'Valor Médio', value: '1.087 €', subtitle: 'Por artigo' },
+            { id: 3, title: 'Cobertura Stock', value: '42 dias', subtitle: 'Média' },
+            { id: 4, title: 'Inventário Agendado', value: '15 Mar', subtitle: 'Próximo' }
+        ],
+        'rentabilidade-top': [
+            { id: 1, title: 'Categoria Top', value: 'Software & Licenças', subtitle: '52% margem' },
+            { id: 2, title: 'Produto Top', value: 'Enterprise Suite', subtitle: '145.000 € lucro' },
+            { id: 3, title: 'Melhor Trimestre', value: 'Q3 2025', subtitle: '487.000 € lucro' },
+            { id: 4, title: 'Canal Mais Rentável', value: 'Online Direct', subtitle: '41% margem' }
+        ],
+        'rentabilidade-stats': [
+            { id: 1, title: 'Receita Mês', value: '892.000 €', subtitle: '+18% vs anterior' },
+            { id: 2, title: 'Custos Mês', value: '547.000 €', subtitle: '61% receita' },
+            { id: 3, title: 'Lucro Mês', value: '345.000 €', subtitle: '38.7% margem' },
+            { id: 4, title: 'Projeção Anual', value: '4.2M €', subtitle: 'Lucro líquido' }
+        ],
+        'default': [
+            { id: 1, title: 'Métrica 1', value: '1.247', subtitle: 'Total' },
+            { id: 2, title: 'Métrica 2', value: '342', subtitle: 'Ativos' },
+            { id: 3, title: 'Métrica 3', value: '89%', subtitle: 'Taxa' },
+            { id: 4, title: 'Métrica 4', value: '24.5K', subtitle: 'Valor' }
+        ]
+    };
+
+    const cards = mockData[pageContext] || mockData['default'];
+    const displayCards = cards.slice(0, cardCount);
 
     return (
-        <div className="w-[20%] flex flex-col gap-3">
-            {cards.map((card, index) => (
+        <div className="w-[22%] flex flex-col gap-3 h-full overflow-hidden">
+            {displayCards.map((card) => (
                 <div
-                    key={card.id || index}
-                    className="bg-gradient-to-r from-orange-400 to-orange-500 rounded-lg shadow-md p-3 text-white flex flex-col justify-between flex-1"
+                    key={card.id}
+                    className="bg-linear-to-r from-orange-400 to-orange-500 rounded-lg shadow-md p-3 text-white flex flex-col justify-between flex-1 min-h-0"
                 >
-                    <span className="text-xs font-bold">{card.title}</span>
-                    <span className="text-sm">{card.value}</span>
+                    <span className="text-xs font-semibold opacity-90">{card.title}</span>
+                    <span className="text-lg font-bold leading-tight">{card.value}</span>
+                    {card.subtitle && (
+                        <span className="text-xs opacity-80 mt-1">{card.subtitle}</span>
+                    )}
                 </div>
             ))}
         </div>
