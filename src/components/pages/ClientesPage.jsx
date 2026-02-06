@@ -10,6 +10,7 @@ import DataTable from '../DataTable';
 import LoadingOverlay from '../LoadingOverlay';
 import useClientesData from '../../hooks/useClientesData';
 import { useABCFilter } from '../../context/ABCFilterContext';
+import ClientesChart from '../charts/ClientesChart';
 
 function ClientesPage() {
     const navigate = useNavigate();
@@ -99,14 +100,16 @@ function ClientesPage() {
                         <KPICards pageTitle="CL" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
-                        <GraphCards />
+                        <GraphCards>
+                            <ClientesChart title="Gráfico Vendas Anual" />
+                        </GraphCards>
                         <SideCards cardCount={4} pageContext="clientes-top" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
                         <SideCards cardCount={4} pageContext="clientes-stats" />
                         <GraphCards />
                     </div>
-                    <div className="h-[40%] w-full flex gap-4 shrink-0">
+                    <div className="h-[85%] w-full flex gap-4 shrink-0">
                         <DataTable
                             title="Tabela de Clientes"
                             columns={clientesColumns}

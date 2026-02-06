@@ -10,6 +10,7 @@ import DataTable from '../DataTable';
 import LoadingOverlay from '../LoadingOverlay';
 import useFornecedoresData from '../../hooks/useFornecedoresData';
 import { useABCFilter } from '../../context/ABCFilterContext';
+import ClientesChart from '../charts/ClientesChart';
 
 function FornecedoresPage() {
     const navigate = useNavigate();
@@ -97,14 +98,16 @@ function FornecedoresPage() {
                         <KPICards pageTitle="FR" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
-                        <GraphCards />
+                        <GraphCards>
+                            <ClientesChart title="Gráfico Compras Anual" />
+                        </GraphCards>
                         <SideCards cardCount={4} pageContext="fornecedores-top" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
                         <SideCards cardCount={4} pageContext="fornecedores-stats" />
                         <GraphCards />
                     </div>
-                    <div className="h-[40%] w-full flex gap-4 shrink-0">
+                    <div className="h-[85%] w-full flex gap-4 shrink-0">
                         <DataTable
                             title="Lista de Fornecedores"
                             columns={fornecedoresColumns}

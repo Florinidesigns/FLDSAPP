@@ -115,9 +115,9 @@ function VendasChart({ title = 'Vendas' }) {
 
     const formatValue = (value) => {
         if (viewType === 'percentagem') {
-            return `${value.toFixed(1)}%`;
+            return `${value.toFixed(2)}%`;
         } else if (viewType === 'valor') {
-            return `${(value / 1000).toFixed(0)}K`;
+            return `${(value / 1000).toFixed(2)}K`;
         }
         return value.toString();
     };
@@ -261,17 +261,6 @@ function VendasChart({ title = 'Vendas' }) {
                 {/* Chart Area */}
                 <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                     <div className="flex-1 flex items-end justify-between gap-1 px-2 relative">
-                        {/* Average Line */}
-                        {visibleSeries.showMedia && (
-                            <div
-                                className="absolute left-0 right-0 border-t-2 border-orange-500 border-dashed pointer-events-none"
-                                style={{ bottom: `${(getAverage() / getMaxValue()) * 100}%` }}
-                            >
-                                <span className="absolute -top-5 right-2 text-xs font-semibold text-orange-600 bg-white px-1">
-                                    {formatValue(getAverage())}
-                                </span>
-                            </div>
-                        )}
                         {getData().map((item, index) => {
                             const maxValue = getMaxValue();
                             const value2025 = item[`${viewType}2025`];
@@ -337,6 +326,17 @@ function VendasChart({ title = 'Vendas' }) {
                                 </div>
                             );
                         })}
+                        {/* Average Line - Rendered last to appear on top */}
+                        {visibleSeries.showMedia && (
+                            <div
+                                className="absolute left-0 right-0 border-t-2 border-orange-500 border-dashed pointer-events-none z-10"
+                                style={{ bottom: `${(getAverage() / getMaxValue()) * 100}%` }}
+                            >
+                                <span className="absolute -top-5 right-2 text-xs font-semibold text-orange-600 bg-white px-1">
+                                    {formatValue(getAverage())}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

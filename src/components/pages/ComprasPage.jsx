@@ -75,7 +75,7 @@ function ComprasPage() {
                         <SideCards cardCount={4} pageContext="compras-stats" />
                         <GraphCards />
                     </div>
-                    <div className="h-[40%] w-full flex gap-4 shrink-0">
+                    <div className="h-[85%] w-full flex gap-4 shrink-0">
                         <DataTable
                             title="Últimas Compras"
                             columns={comprasColumns}

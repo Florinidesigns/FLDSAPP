@@ -10,6 +10,7 @@ import DataTable from '../DataTable';
 import LoadingOverlay from '../LoadingOverlay';
 import useArtigosData from '../../hooks/useArtigosData';
 import { useABCFilter } from '../../context/ABCFilterContext';
+import ClientesChart from '../charts/ClientesChart';
 
 function ArtigosPage() {
     const navigate = useNavigate();
@@ -99,14 +100,16 @@ function ArtigosPage() {
                         <KPICards pageTitle="AS" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
-                        <GraphCards />
+                        <GraphCards>
+                            <ClientesChart title="Gráfico Stocks Anual" />
+                        </GraphCards>
                         <SideCards cardCount={4} pageContext="artigos-top" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
                         <SideCards cardCount={4} pageContext="artigos-stats" />
                         <GraphCards />
                     </div>
-                    <div className="h-[40%] w-full flex gap-4 shrink-0">
+                    <div className="h-[85%] w-full flex gap-4 shrink-0">
                         <DataTable
                             title="Catálogo de Artigos"
                             columns={artigosColumns}

@@ -112,7 +112,7 @@ function VisaoGeralPage() {
                             <ComprasChart title="Gráfico de Compras" />
                         </GraphCards>
                     </div>
-                    <div className="h-[40%] w-full flex gap-4 shrink-0">
+                    <div className="h-[85%] w-full flex gap-4 shrink-0">
                         <DataTable
                             title="Atividade Recente"
                             columns={atividadeColumns}
