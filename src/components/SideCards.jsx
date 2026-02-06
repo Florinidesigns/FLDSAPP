@@ -8,7 +8,7 @@ function SideCards({ cardCount = 4, data = [] }) {
     }));
 
     return (
-        <div className="w-[30%] flex flex-col gap-3">
+        <div className="w-[20%] flex flex-col gap-3">
             {cards.map((card, index) => (
                 <div
                     key={card.id || index}

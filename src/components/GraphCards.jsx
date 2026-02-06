@@ -1,11 +1,13 @@
 import React from 'react';
 
-function GraphCards() {
+function GraphCards({ children }) {
     return (
-        <div className="w-[70%] bg-gray-50 rounded-lg shadow-md border border-gray-200 p-4">
-            <div className="h-full flex items-center justify-center text-gray-400">
-                Gráfico
-            </div>
+        <div className="w-[80%] h-full">
+            {children || (
+                <div className="h-full bg-gray-50 rounded-lg shadow-md border border-gray-200 p-4 flex items-center justify-center text-gray-400">
+                    Gráfico
+                </div>
+            )}
         </div>
     );
 }

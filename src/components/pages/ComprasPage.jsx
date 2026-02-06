@@ -9,6 +9,7 @@ import SideCards from '../SideCards';
 import GridCard from '../GridCard';
 import LoadingOverlay from '../LoadingOverlay';
 import useComprasData from '../../hooks/useComprasData';
+import ComprasChart from '../charts/ComprasChart';
 
 function ComprasPage() {
     const navigate = useNavigate();
@@ -28,7 +29,9 @@ function ComprasPage() {
                         <KPICards pageTitle="CP" />
                     </div>
                     <div className="h-[40%] w-full flex gap-4 flex-shrink-0">
-                        <GraphCards />
+                        <GraphCards>
+                            <ComprasChart title="Análise de Compras" />
+                        </GraphCards>
                         <SideCards cardCount={4} />
                     </div>
                     <div className="h-[40%] w-full flex gap-4 flex-shrink-0">
