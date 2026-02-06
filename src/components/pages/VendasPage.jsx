@@ -64,18 +64,18 @@ function VendasPage() {
             <div className="bg-white flex flex-row rounded-lg shadow-lg h-[88%] relative">
                 <SideBarMenu />
                 <div className='h-full w-[95%] flex flex-col gap-4 p-4 overflow-auto hide-scrollbar'>
-                    <div className="h-[15%] flex-shrink-0">
+                    <div className="h-[15%] shrink-0">
                         <KPICards pageTitle="VD" />
                     </div>
-                    <div className="h-[50%] w-full flex gap-4 flex-shrink-0">
+                    <div className="h-[50%] w-full flex gap-4 shrink-0">
                         <GraphCards />
                         <SideCards cardCount={4} pageContext="vendas-top" />
                     </div>
-                    <div className="h-[50%] w-full flex gap-4 flex-shrink-0">
+                    <div className="h-[50%] w-full flex gap-4 shrink-0">
                         <SideCards cardCount={4} pageContext="vendas-stats" />
                         <GraphCards />
                     </div>
-                    <div className="h-[40%] w-full flex gap-4 flex-shrink-0">
+                    <div className="h-[40%] w-full flex gap-4 shrink-0">
                         <DataTable
                             title="Últimas Vendas"
                             columns={vendasColumns}

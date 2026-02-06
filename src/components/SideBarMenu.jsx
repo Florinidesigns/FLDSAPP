@@ -32,7 +32,7 @@ function SideBarMenu() {
                             className='flex items-center gap-2 p-2 rounded-lg hover:bg-slate-300 transition-all duration-200 group-hover:gap-4 group-hover:justify-start w-full'
                             title={item.label}
                         >
-                            <Icon size={24} className='text-slate-700 flex-shrink-0' />
+                            <Icon size={24} className='text-slate-700 shrink-0' />
                             <span className='text-xs text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap hidden group-hover:inline'>
                                 {item.label}
                             </span>
