@@ -239,7 +239,7 @@ function ComprasChart({ title = 'Compras' }) {
                                     {viewType === 'percentagem' ? (
                                         <div className="w-full flex items-end justify-center flex-1 pb-1">
                                             {/* Single Percentage Bar */}
-                                            <div className="relative w-16 h-full flex flex-col justify-end">
+                                            <div className="relative flex-1 h-full flex flex-col justify-end">
                                                 <div
                                                     className="w-full bg-rose-400 rounded-t flex items-center justify-center"
                                                     style={{ height: `${height2025}%` }}

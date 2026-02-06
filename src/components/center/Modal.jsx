@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Modal({ isOpen, onClose, children }) {
+function Modal({ isOpen, onClose, children, className = 'max-w-md w-full' }) {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 relative">
+            <div className={`bg-white rounded-lg shadow-xl ${className} mx-4 relative`}>
                 {/* Botão de fechar */}
                 <button
                     onClick={onClose}
