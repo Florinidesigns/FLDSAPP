@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 function VendasChart({ title = 'Vendas' }) {
     const [viewType, setViewType] = useState('valor'); // quantidade, valor, percentagem
     const [periodType, setPeriodType] = useState('mensal'); // mensal, trimestral, semestral
-    const [visibleSeries, setVisibleSeries] = useState({ show2025: true, show2024: true });
+    const [visibleSeries, setVisibleSeries] = useState({ show2025: true, show2024: true, showMedia: false });
 
     // Mock data para vendas
     const mockData = {
@@ -122,6 +122,25 @@ function VendasChart({ title = 'Vendas' }) {
         return value.toString();
     };
 
+    const getAverage = () => {
+        const data = getData();
+        const values = [];
+
+        if (viewType === 'percentagem') {
+            values.push(...data.map(d => d.percentagem2025));
+        } else {
+            if (visibleSeries.show2025) {
+                values.push(...data.map(d => d[`${viewType}2025`]));
+            }
+            if (visibleSeries.show2024) {
+                values.push(...data.map(d => d[`${viewType}2024`]));
+            }
+        }
+
+        if (values.length === 0) return 0;
+        return values.reduce((sum, val) => sum + val, 0) / values.length;
+    };
+
     return (
         <div className="w-full h-full bg-white rounded-lg shadow-md border border-gray-200 flex flex-col overflow-hidden">
             {/* Title Bar */}
@@ -167,10 +186,19 @@ function VendasChart({ title = 'Vendas' }) {
                     {/* Legend */}
                     <div className="flex gap-6">
                         {viewType === 'percentagem' ? (
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 bg-cyan-400 rounded"></div>
-                                <span className="text-sm font-semibold">Variação % 2025</span>
-                            </div>
+                            <>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 bg-cyan-400 rounded"></div>
+                                    <span className="text-sm font-semibold">Variação % 2025</span>
+                                </div>
+                                <button
+                                    onClick={() => setVisibleSeries(prev => ({ ...prev, showMedia: !prev.showMedia }))}
+                                    className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                >
+                                    <div className={`w-3 h-0.5 ${visibleSeries.showMedia ? 'bg-orange-500' : 'bg-gray-300'}`}></div>
+                                    <span className={`text-sm font-semibold ${visibleSeries.showMedia ? 'text-gray-900' : 'text-gray-400'}`}>Média</span>
+                                </button>
+                            </>
                         ) : (
                             <>
                                 <button
@@ -186,6 +214,13 @@ function VendasChart({ title = 'Vendas' }) {
                                 >
                                     <div className={`w-3 h-3 rounded ${visibleSeries.show2024 ? 'bg-slate-600' : 'bg-gray-300'}`}></div>
                                     <span className={`text-sm font-semibold ${visibleSeries.show2024 ? 'text-gray-900' : 'text-gray-400'}`}>2024</span>
+                                </button>
+                                <button
+                                    onClick={() => setVisibleSeries(prev => ({ ...prev, showMedia: !prev.showMedia }))}
+                                    className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                >
+                                    <div className={`w-3 h-0.5 ${visibleSeries.showMedia ? 'bg-orange-500' : 'bg-gray-300'}`}></div>
+                                    <span className={`text-sm font-semibold ${visibleSeries.showMedia ? 'text-gray-900' : 'text-gray-400'}`}>Média</span>
                                 </button>
                             </>
                         )}
@@ -225,7 +260,18 @@ function VendasChart({ title = 'Vendas' }) {
 
                 {/* Chart Area */}
                 <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                    <div className="flex-1 flex items-end justify-between gap-1 px-2">
+                    <div className="flex-1 flex items-end justify-between gap-1 px-2 relative">
+                        {/* Average Line */}
+                        {visibleSeries.showMedia && (
+                            <div
+                                className="absolute left-0 right-0 border-t-2 border-orange-500 border-dashed pointer-events-none"
+                                style={{ bottom: `${(getAverage() / getMaxValue()) * 100}%` }}
+                            >
+                                <span className="absolute -top-5 right-2 text-xs font-semibold text-orange-600 bg-white px-1">
+                                    {formatValue(getAverage())}
+                                </span>
+                            </div>
+                        )}
                         {getData().map((item, index) => {
                             const maxValue = getMaxValue();
                             const value2025 = item[`${viewType}2025`];
