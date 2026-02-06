@@ -5,10 +5,14 @@ import TopMenu from '../TopMenu';
 import SideBarMenu from '../SideBarMenu';
 import KPICards from '../KPICards';
 import GraphCards from '../GraphCards';
+import GraphCardsHalf from '../GraphCardsHalf';
 import SideCards from '../SideCards';
 import DataTable from '../DataTable';
 import LoadingOverlay from '../LoadingOverlay';
 import useVendasData from '../../hooks/useVendasData';
+import VendasChart from '../charts/VendasChart';
+import VendasParetoChart from '../charts/VendasParetoChart';
+import VendasABCChart from '../charts/VendasABCChart';
 
 function VendasPage() {
     const navigate = useNavigate();
@@ -68,12 +72,21 @@ function VendasPage() {
                         <KPICards pageTitle="VD" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
-                        <GraphCards />
+                        <GraphCards>
+                            <VendasChart title="Gráfico de Vendas" />
+                        </GraphCards>
                         <SideCards cardCount={4} pageContext="vendas-top" />
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
                         <SideCards cardCount={4} pageContext="vendas-stats" />
-                        <GraphCards />
+                        <div className="flex-1 flex flex-row gap-4">
+                            <GraphCardsHalf>
+                                <VendasParetoChart title="Vendas por Cliente (Pareto)" />
+                            </GraphCardsHalf>
+                            <GraphCardsHalf>
+                                <VendasABCChart title="Análise ABC - Clientes" />
+                            </GraphCardsHalf>
+                        </div>
                     </div>
                     <div className="h-[40%] w-full flex gap-4 shrink-0">
                         <DataTable
