@@ -191,7 +191,7 @@ function VendasABCChart({ title = 'Análise ABC - Clientes' }) {
                         >
                             <div className="flex items-center gap-1.5 mb-0">
                                 <div
-                                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                    className="w-2.5 h-2.5 rounded-full shrink-0"
                                     style={{ backgroundColor: segment.color }}
                                 />
                                 <div className="flex-1">

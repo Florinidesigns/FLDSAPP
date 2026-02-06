@@ -5,12 +5,15 @@ import TopMenu from '../TopMenu';
 import SideBarMenu from '../SideBarMenu';
 import KPICards from '../KPICards';
 import GraphCards from '../GraphCards';
+import GraphCardsHalf from '../GraphCardsHalf';
 import SideCards from '../SideCards';
+import SideCardABC from '../SideCardABC';
 import DataTable from '../DataTable';
 import LoadingOverlay from '../LoadingOverlay';
 import useClientesData from '../../hooks/useClientesData';
 import { useABCFilter } from '../../context/ABCFilterContext';
 import ClientesChart from '../charts/ClientesChart';
+import ClientesTop10Chart from '../charts/ClientesTop10Chart';
 
 function ClientesPage() {
     const navigate = useNavigate();
@@ -107,7 +110,10 @@ function ClientesPage() {
                     </div>
                     <div className="h-[50%] w-full flex gap-4 shrink-0">
                         <SideCards cardCount={4} pageContext="clientes-stats" />
-                        <GraphCards />
+                        <GraphCards>
+                            <ClientesTop10Chart title="Gráfico Top 10" />
+                        </GraphCards>
+                        <SideCardABC />
                     </div>
                     <div className="h-[85%] w-full flex gap-4 shrink-0">
                         <DataTable

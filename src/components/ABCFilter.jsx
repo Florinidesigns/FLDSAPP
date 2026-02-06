@@ -65,7 +65,7 @@ function ABCFilter({ activeFilter, onFilterChange }) {
 
             {isOpen && (
                 <div
-                    className="fixed bg-white border-2 border-slate-300 rounded-lg shadow-lg z-[9999] w-56"
+                    className="fixed bg-white border-2 border-slate-300 rounded-lg shadow-lg z-9999 w-56"
                     style={{
                         top: `${dropdownPos.top}px`,
                         left: `${dropdownPos.left}px`
