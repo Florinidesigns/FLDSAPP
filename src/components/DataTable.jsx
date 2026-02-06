@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 function DataTable({ title, columns, data, onInfoClick }) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     const filteredData = data.filter(row => {
         const searchLower = searchTerm.toLowerCase();
@@ -10,6 +12,17 @@ function DataTable({ title, columns, data, onInfoClick }) {
             value?.toString().toLowerCase().includes(searchLower)
         );
     });
+
+    // Calcular paginação
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedData = filteredData.slice(startIndex, endIndex);
+
+    // Resetar página quando filtro mudar
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
 
     return (
         <div className="h-full w-full bg-white rounded-lg shadow-md border border-gray-200 flex flex-col overflow-hidden">
@@ -54,7 +67,7 @@ function DataTable({ title, columns, data, onInfoClick }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredData.map((row, rowIndex) => (
+                        {paginatedData.map((row, rowIndex) => (
                             <tr
                                 key={rowIndex}
                                 className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${rowIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'
@@ -80,7 +93,7 @@ function DataTable({ title, columns, data, onInfoClick }) {
                                 )}
                             </tr>
                         ))}
-                        {filteredData.length === 0 && (
+                        {paginatedData.length === 0 && (
                             <tr>
                                 <td
                                     colSpan={columns.length + (onInfoClick ? 1 : 0)}
@@ -93,6 +106,34 @@ function DataTable({ title, columns, data, onInfoClick }) {
                     </tbody>
                 </table>
             </div>
+
+            {/* Footer com Paginação */}
+            {totalPages > 1 && (
+                <div className="px-4 py-2 border-t border-gray-200 flex items-center justify-between shrink-0 bg-gray-50">
+                    <div className="text-xs text-gray-600">
+                        Mostrando {startIndex + 1}-{Math.min(endIndex, filteredData.length)} de {filteredData.length}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                            className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <ChevronLeft size={16} className="text-gray-700" />
+                        </button>
+                        <span className="text-xs text-gray-700 font-medium">
+                            Página {currentPage} de {totalPages}
+                        </span>
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                            className="p-1 rounded hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <ChevronRight size={16} className="text-gray-700" />
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

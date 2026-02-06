@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import TopMenu from '../TopMenu';
@@ -13,11 +13,17 @@ import useVendasData from '../../hooks/useVendasData';
 import VendasChart from '../charts/VendasChart';
 import VendasParetoChart from '../charts/VendasParetoChart';
 import VendasABCChart from '../charts/VendasABCChart';
+import ClienteDetailModal from '../modals/ClienteDetailModal';
+import ProdutoDetailModal from '../modals/ProdutoDetailModal';
 
 function VendasPage() {
     const navigate = useNavigate();
     const { isLoading } = useVendasData();
     const loadingText = 'Loading Vendas';
+    const [selectedCliente, setSelectedCliente] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProduto, setSelectedProduto] = useState(null);
+    const [isProdutoModalOpen, setIsProdutoModalOpen] = useState(false);
 
     // Mock data para tabelas de vendas
     const vendasColumns = [
@@ -40,10 +46,10 @@ function VendasPage() {
 
     const produtosColumns = [
         { key: 'codigo', label: 'Código', width: '15%' },
-        { key: 'produto', label: 'Produto', width: '40%' },
+        { key: 'produto', label: 'Produto', width: '35%' },
         { key: 'qtd', label: 'Qtd', width: '12%' },
         { key: 'valor', label: 'Valor €', width: '18%', format: (val) => val.toLocaleString('pt-PT', { minimumFractionDigits: 2 }) },
-        { key: 'margem', label: 'Margem %', width: '10%', format: (val) => val.toFixed(1) + '%' }
+        { key: 'margem', label: 'Margem %', width: '15%', format: (val) => val.toFixed(1) + '%' }
     ];
 
     const produtosData = [
@@ -55,8 +61,63 @@ function VendasPage() {
         { codigo: 'P-1006', produto: 'Headset Profissional', qtd: 321, valor: 28890.00, margem: 35.8 }
     ];
 
-    const handleInfoClick = (row) => {
-        console.log('Info clicked for:', row);
+    const handleVendaInfoClick = (row) => {
+        // Criar dados mockados detalhados do cliente (baseado na venda)
+        const clienteDetalhado = {
+            numero: 'A.C.1.4',
+            nome: row.cliente,
+            contacto: '+351 21 123 4567',
+            email: 'geral@' + row.cliente.toLowerCase().replace(/\s+/g, '') + '.pt',
+            classificacao: 'A', // A, B ou C
+            volumeVendas: row.valor * 3.5,
+            numPedidos: 171,
+            ticketMedio: row.valor * 0.65,
+            custoVendas: row.valor * 3.1,
+            lucroBruto: row.valor * 1.06,
+            margemBruta: 25.55,
+            lucroMedioPedido: row.valor * 0.155,
+            ticketMedioPedido: row.valor * 0.65,
+            frequenciaCompra: '1.6 dias',
+            primeiraCompra: '09/01/2025',
+            ultimaCompra: '15/10/2025',
+            evolucaoTicket: 49566.67,
+            participacaoFaturacao: 4.86,
+            eficienciaMargem: 0.15,
+            saldoCC: 177681.22,
+            ultimasVendas: [
+                { data: '15/10/2025', documento: 'FT 2497/2025', valorVenda: row.valor * 1.1, custo: row.valor * 0.8, lucro: row.valor * 0.3 },
+                { data: '15/10/2025', documento: 'FT 1.2261/2025', valorVenda: 965.52, custo: 0, lucro: 965.52 },
+                { data: '15/10/2025', documento: 'FT 1.2266/2025', valorVenda: 2022, custo: 1142.56, lucro: 2022 },
+                { data: '13/10/2025', documento: 'FT 1.2228/2025', valorVenda: 1181.6, custo: 1074.32, lucro: 107.28 },
+                { data: '13/10/2025', documento: 'FT 1.2232/2025', valorVenda: 1344.78, custo: 1168.38, lucro: 176.4 },
+                { data: '10/10/2025', documento: 'FT 1.2210/2025', valorVenda: 1422.72, custo: 1236.12, lucro: 186.6 }
+            ]
+        };
+        setSelectedCliente(clienteDetalhado);
+        setIsModalOpen(true);
+    };
+
+    const handleProdutoInfoClick = (row) => {
+        // Criar dados mockados detalhados do produto
+        const produtoDetalhado = {
+            codigo: row.codigo,
+            produto: row.produto,
+            categoria: 'Informática',
+            fornecedor: 'Tech Distribuição Lda',
+            stock: 245,
+            stockMinimo: 50,
+            precoCompra: (row.valor / row.qtd) * (1 - row.margem / 100),
+            precoVenda: row.valor / row.qtd,
+            margemAtual: row.margem,
+            qtdVendida: row.qtd,
+            valorTotal: row.valor,
+            ultimaCompra: '28/01/2026',
+            ultimaVenda: '05/02/2026',
+            rotacao: 'Alta',
+            classificacao: 'A'
+        };
+        setSelectedProduto(produtoDetalhado);
+        setIsProdutoModalOpen(true);
     };
 
     if (isLoading) {
@@ -93,18 +154,30 @@ function VendasPage() {
                             title="Últimas Vendas"
                             columns={vendasColumns}
                             data={vendasData}
-                            onInfoClick={handleInfoClick}
+                            onInfoClick={handleVendaInfoClick}
                         />
                         <DataTable
                             title="Produtos Mais Vendidos"
                             columns={produtosColumns}
                             data={produtosData}
-                            onInfoClick={handleInfoClick}
+                            onInfoClick={handleProdutoInfoClick}
                         />
                     </div>
                 </div>
             </div>
             <div className="bg-slate-500 text-white h-[2%]"></div>
+
+            <ClienteDetailModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                clienteData={selectedCliente}
+            />
+
+            <ProdutoDetailModal
+                isOpen={isProdutoModalOpen}
+                onClose={() => setIsProdutoModalOpen(false)}
+                produtoData={selectedProduto}
+            />
         </div>
     );
 }

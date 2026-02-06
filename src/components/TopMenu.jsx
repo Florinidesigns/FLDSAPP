@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ABCFilter from './ABCFilter';
+import { useABCFilter } from '../context/ABCFilterContext';
 
 function TopMenu() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { abcFilter, setAbcFilter } = useABCFilter();
+
+    // Páginas que possuem o filtro ABC
+    const pagesWithABCFilter = ['/clientes', '/fornecedores', '/artigos'];
+    const showABCFilter = pagesWithABCFilter.includes(location.pathname);
+
+    // Reseta o filtro para "Todos" quando muda de página
+    useEffect(() => {
+        setAbcFilter('Todos');
+    }, [location.pathname, setAbcFilter]);
 
     const isActive = (path) => location.pathname === path;
     const getButtonClass = (path) =>
@@ -56,6 +68,14 @@ function TopMenu() {
                 >
                     Rentabilidade & Margens
                 </button>
+
+                {/* Divisor */}
+                {showABCFilter && <div className="h-6 w-px bg-slate-400"></div>}
+
+                {/* ABCFilter - Apenas nas páginas especificadas */}
+                {showABCFilter && (
+                    <ABCFilter activeFilter={abcFilter} onFilterChange={setAbcFilter} />
+                )}
             </div>
         </div>
     );

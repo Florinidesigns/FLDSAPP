@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import TopMenu from '../TopMenu';
@@ -11,11 +11,18 @@ import LoadingOverlay from '../LoadingOverlay';
 import useVisaoGeralData from '../../hooks/useVisaoGeralData';
 import VendasChart from '../charts/VendasChart';
 import ComprasChart from '../charts/ComprasChart';
+import AtividadeDetailModal from '../modals/AtividadeDetailModal';
+import AlertaDetailModal from '../modals/AlertaDetailModal';
 
 function VisaoGeralPage() {
     const navigate = useNavigate();
     const { isLoading } = useVisaoGeralData();
     const loadingText = 'Loading Visao Geral';
+
+    const [selectedAtividade, setSelectedAtividade] = useState(null);
+    const [isAtividadeModalOpen, setIsAtividadeModalOpen] = useState(false);
+    const [selectedAlerta, setSelectedAlerta] = useState(null);
+    const [isAlertaModalOpen, setIsAlertaModalOpen] = useState(false);
 
     // Mock data para tabelas da visão geral
     const atividadeColumns = [
@@ -52,8 +59,33 @@ function VisaoGeralPage() {
         { prioridade: 'Baixa', tipo: 'Sistema', mensagem: 'Atualização de sistema disponível', data: '01/02/2026', acao: 'Agendar' }
     ];
 
-    const handleInfoClick = (row) => {
-        console.log('Info clicked for:', row);
+    const handleAtividadeInfoClick = (row) => {
+        // Criar dados detalhados da atividade
+        const atividadeDetalhada = {
+            tipo: row.tipo,
+            descricao: row.descricao,
+            data: row.data,
+            dataCompleta: row.data + ' - 05/02/2026',
+            valor: row.valor,
+            status: row.status,
+            documento: row.descricao.split(' - ')[0],
+            entidade: row.descricao.split(' - ')[1] || 'Entidade Desconhecida'
+        };
+        setSelectedAtividade(atividadeDetalhada);
+        setIsAtividadeModalOpen(true);
+    };
+
+    const handleAlertaInfoClick = (row) => {
+        // Criar dados detalhados do alerta
+        const alertaDetalhado = {
+            prioridade: row.prioridade,
+            tipo: row.tipo,
+            mensagem: row.mensagem,
+            data: row.data,
+            acao: row.acao
+        };
+        setSelectedAlerta(alertaDetalhado);
+        setIsAlertaModalOpen(true);
     };
 
     if (isLoading) {
@@ -85,18 +117,30 @@ function VisaoGeralPage() {
                             title="Atividade Recente"
                             columns={atividadeColumns}
                             data={atividadeData}
-                            onInfoClick={handleInfoClick}
+                            onInfoClick={handleAtividadeInfoClick}
                         />
                         <DataTable
                             title="Alertas e Notificações"
                             columns={alertasColumns}
                             data={alertasData}
-                            onInfoClick={handleInfoClick}
+                            onInfoClick={handleAlertaInfoClick}
                         />
                     </div>
                 </div>
             </div>
             <div className="bg-slate-500 text-white h-[2%]"></div>
+
+            <AtividadeDetailModal
+                isOpen={isAtividadeModalOpen}
+                onClose={() => setIsAtividadeModalOpen(false)}
+                atividadeData={selectedAtividade}
+            />
+
+            <AlertaDetailModal
+                isOpen={isAlertaModalOpen}
+                onClose={() => setIsAlertaModalOpen(false)}
+                alertaData={selectedAlerta}
+            />
         </div>
     );
 }
